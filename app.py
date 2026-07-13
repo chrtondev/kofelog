@@ -283,4 +283,5 @@ if __name__ == "__main__":
     # (0.0.0.0) — Flask's debugger allows arbitrary code execution.
     import os
     debug = os.environ.get("KOFELOG_DEBUG") == "1"
-    app.run(host="127.0.0.1", port=5000, debug=debug)
+    # Bind to 0.0.0.0 so other devices on the LAN can reach the app.
+    app.run(host="0.0.0.0", port=5000, debug=debug)
