@@ -16,7 +16,7 @@ Open a terminal and run these one at a time:
 
 ```bash
 # 1. Download the code
-git clone https://github.com/chrtondev/kofelog.git
+git clone https://github.com/chrtondev/kofelog
 cd kofelog
 
 # 2. Create an isolated environment for the dependencies
