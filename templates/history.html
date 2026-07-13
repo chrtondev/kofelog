@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Brew History · Coffee Logger{% endblock %}
+
+{% block content %}
+<h1>Brew History</h1>
+
+{% if brews %}
+<div class="brew-list">
+  {% for e in brews %}
+  <article class="card brew">
+    <div class="brew-top">
+      <div>
+        <span class="brew-bean">{{ e.bean_name or "Unknown beans" }}</span>
+        {% if e.rating %}<span class="chip rating">{{ e.rating }}/10</span>{% endif %}
+      </div>
+      <time>{{ e.brewed_at }}</time>
+    </div>
+
+    <div class="brew-tags">
+      {% if e.method_name %}<span class="chip">{{ e.method_name }}</span>{% endif %}
+      {% if e.brewer_name %}<span class="chip">{{ e.brewer_name }}</span>{% endif %}
+      {% if e.grinder_name %}<span class="chip">{{ e.grinder_name }}{% if e.grind_setting %} · {{ e.grind_setting }}{% endif %}</span>{% endif %}
+      {% if e.grind_category %}<span class="chip">{{ e.grind_category }}</span>{% endif %}
+    </div>
+
+    <div class="brew-stats">
+      {% if e.coffee_grams %}<span><b>{{ e.coffee_grams|round(1) }}</b> g in</span>{% endif %}
+      {% if e.water_grams %}<span><b>{{ e.water_grams|round(0)|int }}</b> g water</span>{% endif %}
+      {% if e.yield_grams %}<span><b>{{ e.yield_grams|round(1) }}</b> g out</span>{% endif %}
+      {% if e.brew_time_seconds %}<span><b>{{ e.brew_time_seconds }}</b> s</span>{% endif %}
+      {% if e.water_temperature %}<span><b>{{ e.water_temperature|round(0)|int }}</b>°{{ e.temperature_unit or '' }}</span>{% endif %}
+      {% if e.coffee_grams and e.water_grams %}<span class="ratio">1:{{ (e.water_grams / e.coffee_grams)|round(1) }}</span>{% endif %}
+    </div>
+
+    {% if e.notes %}<p class="brew-notes">{{ e.notes }}</p>{% endif %}
+
+    <form method="post" action="{{ url_for('delete_brew', brew_id=e.id) }}" class="brew-del"
+          onsubmit="return confirm('Delete this brew entry?')">
+      <button type="submit" class="link-danger">Delete</button>
+    </form>
+  </article>
+  {% endfor %}
+</div>
+{% else %}
+<p class="empty">No brews logged yet. <a href="{{ url_for('log_brew') }}">Log your first cup →</a></p>
+{% endif %}
+{% endblock %}

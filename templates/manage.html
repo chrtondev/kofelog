@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field_input %}
+{% block title %}{{ cfg.plural }} · Coffee Logger{% endblock %}
+
+{% block content %}
+<h1>{{ cfg.plural }}</h1>
+
+<details class="card add-block">
+  <summary>+ Add {{ cfg.singular }}</summary>
+  <form method="post" action="{{ url_for('manage_add', slug=slug) }}" class="stack-form">
+    <div class="form-grid">
+      {% for f in cfg.fields %}{{ field_input(f, none, options) }}{% endfor %}
+    </div>
+    <button type="submit" class="primary">Save {{ cfg.singular }}</button>
+  </form>
+</details>
+
+{% if records %}
+<div class="table-wrap">
+<table class="manage-table">
+  <thead>
+    <tr>
+      {% for _, header in cfg.list_columns %}<th>{{ header }}</th>{% endfor %}
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr class="{{ 'archived' if not r.active }}">
+      {% for col, _ in cfg.list_columns %}
+        <td>{{ r[col] if r[col] not in (none, '') else '—' }}</td>
+      {% endfor %}
+      <td>
+        {% if r.active %}<span class="chip ok">Active</span>
+        {% else %}<span class="chip muted">Archived</span>{% endif %}
+      </td>
+      <td class="row-actions">
+        <a href="{{ url_for('manage_edit', slug=slug, row_id=r.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('manage_archive', slug=slug, row_id=r.id) }}">
+          <input type="hidden" name="active" value="{{ '0' if r.active else '1' }}">
+          <button type="submit" class="link">{{ 'Archive' if r.active else 'Restore' }}</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="empty">No {{ cfg.plural|lower }} yet. Add one above.</p>
+{% endif %}
+{% endblock %}

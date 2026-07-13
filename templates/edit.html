@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_macros.html" import field_input %}
+{% block title %}Edit {{ cfg.singular }} · Coffee Logger{% endblock %}
+
+{% block content %}
+<h1>Edit {{ cfg.singular }}</h1>
+
+<form method="post" action="{{ url_for('manage_edit', slug=slug, row_id=record.id) }}" class="card stack-form">
+  <div class="form-grid">
+    {% for f in cfg.fields %}{{ field_input(f, record, options) }}{% endfor %}
+  </div>
+  <div class="btn-row">
+    <button type="submit" class="primary">Save changes</button>
+    <a class="btn-secondary" href="{{ url_for('manage', slug=slug) }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

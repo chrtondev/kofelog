@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% block title %}Log Brew · Coffee Logger{% endblock %}
+
+{% block content %}
+<h1>Log a Brew</h1>
+
+<form class="brew-form" method="post" action="{{ url_for('add_brew') }}">
+  <div class="sheet">
+
+    <div class="cols">
+      <div class="col">
+
+        <section class="block">
+          <h2>Beans</h2>
+          <div class="field">
+            <label for="bean-select">Bean</label>
+            <div class="select-row">
+              <select id="bean-select" name="bean_id">
+                <option value="">Select beans…</option>
+                {% for b in beans %}
+                  <option value="{{ b.id }}">{{ b.display_name }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="add-new" data-resource="beans">+ New</button>
+            </div>
+          </div>
+          <div id="bean-summary" class="summary" hidden></div>
+        </section>
+
+        <section class="block">
+          <h2>Grinding</h2>
+          <div class="field">
+            <label for="grinder-select">Grinder</label>
+            <div class="select-row">
+              <select id="grinder-select" name="grinder_id">
+                <option value="">Select grinder…</option>
+                {% for g in grinders %}
+                  <option value="{{ g.id }}">{{ g.name }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="add-new" data-resource="grinders">+ New</button>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label for="grind-setting">Setting</label>
+              <input type="text" id="grind-setting" name="grind_setting" placeholder="4.2 · 18 clicks · 8E">
+            </div>
+            <div class="field">
+              <label for="grind-category">Grind size</label>
+              <select id="grind-category" name="grind_category">
+                <option value="">—</option>
+                <option>Extra fine</option>
+                <option>Fine</option>
+                <option>Medium-fine</option>
+                <option>Medium</option>
+                <option>Medium-coarse</option>
+                <option>Coarse</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+      </div>
+      <div class="col">
+
+        <section class="block">
+          <h2>Brewing</h2>
+          <div class="grid2">
+            <div class="field">
+              <label for="method-select">Method</label>
+              <div class="select-row">
+                <select id="method-select" name="method_id">
+                  <option value="">Select…</option>
+                  {% for m in methods %}
+                    <option value="{{ m.id }}">{{ m.name }}</option>
+                  {% endfor %}
+                </select>
+                <button type="button" class="add-new" data-resource="methods">+</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="brewer-select">Brewer</label>
+              <div class="select-row">
+                <select id="brewer-select" name="brewer_id">
+                  <option value="">Select…</option>
+                </select>
+                <button type="button" class="add-new" data-resource="brewers">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <label for="water-temp">Water temp</label>
+              <div class="select-row">
+                <input type="number" step="any" id="water-temp" name="water_temperature" placeholder="203">
+                <select name="temperature_unit" class="unit">
+                  <option value="F">°F</option>
+                  <option value="C">°C</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="brewed-at">Brewed at</label>
+              <input type="datetime-local" id="brewed-at" name="brewed_at">
+            </div>
+          </div>
+        </section>
+
+        <section class="block">
+          <h2>Recipe</h2>
+          <div class="grid2">
+            <div class="field">
+              <label for="coffee-grams">Coffee (g)</label>
+              <input type="number" step="any" id="coffee-grams" name="coffee_grams" placeholder="20">
+            </div>
+            <div class="field">
+              <label for="water-grams">Water (g)</label>
+              <input type="number" step="any" id="water-grams" name="water_grams" placeholder="320">
+            </div>
+            <div class="field">
+              <label for="brew-time">Time (s)</label>
+              <input type="number" step="1" id="brew-time" name="brew_time_seconds" placeholder="185">
+            </div>
+            <div class="field">
+              <label for="yield-grams">Yield (g)</label>
+              <input type="number" step="any" id="yield-grams" name="yield_grams" placeholder="36">
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <section class="block result">
+      <h2>Result</h2>
+      <div class="result-row">
+        <div class="field rating-field">
+          <label for="rating">Rating</label>
+          <input type="number" min="1" max="10" step="1" id="rating" name="rating" placeholder="1–10">
+        </div>
+        <div class="field notes-field">
+          <label for="notes">Notes</label>
+          <input type="text" id="notes" name="notes" placeholder="Tasting notes, observations…">
+        </div>
+        <button type="submit" class="primary">Save Brew</button>
+      </div>
+    </section>
+
+  </div>
+</form>
+
+<!-- Modal for inline "+ Add New" -->
+<div id="modal-overlay" class="modal-overlay" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Add</h3>
+      <button type="button" id="modal-close" class="icon-btn">✕</button>
+    </div>
+    <form id="modal-form" class="modal-body"></form>
+  </div>
+</div>
+
+<script type="application/json" id="data-forms">{{ resources|tojson }}</script>
+<script type="application/json" id="data-methods">{{ methods|tojson }}</script>
+<script type="application/json" id="data-beans">{{ beans|tojson }}</script>
+<script type="application/json" id="data-brewers">{{ brewers|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

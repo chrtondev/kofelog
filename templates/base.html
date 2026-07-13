@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Coffee Logger{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="topnav">
+        <a class="brand" href="{{ url_for('log_brew') }}">kofelog
+        <div class="navlinks">
+            <a href="{{ url_for('log_brew') }}" class="{{ 'active' if request.endpoint == 'log_brew' }}">Log Brew</a>
+            <a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' }}">History</a>
+            <a href="{{ url_for('manage', slug='beans') }}" class="{{ 'active' if request.view_args and request.view_args.get('slug') == 'beans' }}">Beans</a>
+            <a href="{{ url_for('manage', slug='grinders') }}" class="{{ 'active' if request.view_args and request.view_args.get('slug') == 'grinders' }}">Grinders</a>
+            <a href="{{ url_for('manage', slug='brewers') }}" class="{{ 'active' if request.view_args and request.view_args.get('slug') == 'brewers' }}">Brewers</a>
+            <a href="{{ url_for('manage', slug='methods') }}" class="{{ 'active' if request.view_args and request.view_args.get('slug') == 'methods' }}">Methods</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
