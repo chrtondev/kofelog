@@ -1,0 +1,16 @@
+# Virtual environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Database (local data)
+data/coffee.db
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
